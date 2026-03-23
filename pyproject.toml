@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "lexeme-type"
-version = "0.1.0"  # Starting with 0.1.0 is more standard than 0.0.0a
+version = "1.0.0"
 description = "TODO"
 authors = ["Gwyn Uttmark <biosafetylevel5@gmail.com>"]
 license = ""
 repository = "https://github.com/biosafetylvl5/lexeme-type"
 
-packages = [{include="project", from="src"}]
+packages = [{include="lexeme_type", from="src"}]
 
 readme = "README.md"
 classifiers = [
