@@ -53,12 +53,6 @@ jobs:
         with:
           extra_args: ruff-format --all-files
 
-      - name: Blacken-docs
-        if: success() || failure()
-        uses: pre-commit/action@v3.0.1
-        with:
-          extra_args: blacken-docs --all-files
-
       - name: mdformat
         if: success() || failure()
         uses: pre-commit/action@v3.0.1
@@ -123,20 +117,6 @@ jobs:
       - name: Run pytest
         run: python -m pytest
 
-      - name: Build docs
-        if: success() || failure()
-        run: |
-          cd sphinx
-          make html
-
       - name: Run mypy
         if: (success() || failure()) && matrix.python-version == '3.13'
         run: mypy ./src
-
-      - name: Upload documentation artifact
-        uses: actions/upload-artifact@v4
-        if: always() && matrix.python-version == '3.13'
-        with:
-          name: sphinx-docs
-          path: sphinx/_build/html/
-          retention-days: 3
