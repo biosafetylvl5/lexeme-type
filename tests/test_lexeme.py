@@ -11,7 +11,7 @@ from typing import Dict, Set
 import pytest
 from pydantic import BaseModel
 
-from lexeme_type import Lexeme
+from lexeme_type.lexeme import Lexeme
 
 # REGULAR_PAIR: Tuple[str, str] = ("reader", "readers")
 REGULAR_PAIRS = [
