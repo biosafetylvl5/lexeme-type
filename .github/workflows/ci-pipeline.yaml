@@ -86,13 +86,13 @@ jobs:
       - name: Commitizen (push)
         if: (success() || failure()) && github.event_name == 'push'
         run: |
-          uv pip install commitizen --system
+          uv pip install commitizen
           cz check --rev-range ${{ env.COMMITIZEN_START_REV }}..HEAD
 
       - name: Commitizen (PR)
         if: (success() || failure()) && github.event_name == 'pull_request'
         run: |
-          uv pip install commitizen --system
+          uv pip install commitizen
           cz check --rev-range ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
 
   # ---------------------------------------------------------------------------
@@ -112,7 +112,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install package with all extras
-        run: uv pip install -e .[doc,lint,test] pytest mypy --system
+        run: uv pip install -e .[doc,lint,test] pytest mypy
 
       - name: Run pytest
         run: python -m pytest
