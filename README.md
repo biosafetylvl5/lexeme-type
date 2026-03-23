@@ -21,7 +21,7 @@ inside Pydantic v2 models. Ignores capitalization.
 Examples
 
 ```python
->>> from partial_lexeme import Lexeme
+>>> from partial_lexeme.lexeme import Lexeme
 >>> Lexeme("reader") == "readers" == Lexeme("readers")
 True
 >>> {Lexeme("analyses"): 1} == {"analysis": 1}
