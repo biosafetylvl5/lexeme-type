@@ -1,0 +1,221 @@
+[tool.poetry]
+name = "PROJECT"
+version = "0.1.0"  # Starting with 0.1.0 is more standard than 0.0.0a
+description = "TODO"
+authors = ["Gwyn Uttmark <biosafetylevel5@gmail.com>"]
+license = ""
+repository = "https://github.com/biosafetylvl5/PROJECT"
+
+packages = [{include="project", from="src"}]
+
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Typing :: Typed",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.14"
+rich = "*"
+rich-argparse = "*"
+
+# Optional dependencies for extras
+sphinx = { version = "*", optional = true }
+sphinx-rtd-theme = { version = "*", optional = true }
+sphinx-argparse = { version = "*", optional = true }
+sphinx-copybutton = { version = "*", optional = true }
+sphinx-autodoc-typehints = { version = "*", optional = true }
+sphinxcontrib-mermaid = { version = "*", optional = true }
+myst-parser = { version = "*", optional = true }
+pinkrst = { version = "*", optional = true }
+doc8 = { version = "*", optional = true }
+prettier = { version = "*", optional = true }
+ruff = { version = "*", optional = true }
+mypy = { version = "*", optional = true }
+pytest = { version = "*", optional = true }
+pytest-cov = { version = "*", optional = true }
+pytest-xdist = { version = "*", optional = true }
+commitizen = { version = "*", optional = true }
+
+[tool.poetry.group.dev.dependencies]
+# Development dependencies that are always installed for development
+black = "*"
+pre-commit = "*"
+brassy = "*"
+commitizen = "*"
+
+[tool.poetry.extras]
+doc = [
+    "sphinx",                    # for docs building
+    "myst-parser",
+    "sphinx-rtd-theme",          # for docs building
+    "sphinx-copybutton",         # for docs building
+    "sphinx-autodoc-typehints",  # for docs building
+    "sphinxcontrib-mermaid",     # for docs building
+    "sphinx-argparse",           # for docs building
+    "pinkrst",                   # for rst formatting
+    "doc8",                      # for rst linting
+    "commitizen",                # for better commits
+]
+
+lint = [
+    "pinkrst",                   # for rst auto-formatting
+    "doc8",                      # for rst linting
+    "prettier",                  # YAML, JSON linting
+    "ruff",                      # Python linting
+    "mypy",                      # Type checking
+]
+
+test = [
+    "pytest",                    # for running tests
+    "pytest-cov",                # for test coverage
+    "pytest-xdist",              # for parallel testing
+]
+
+[tool.poetry.scripts]
+# project_cli = "project.cli:main"
+
+[tool.poetry.urls]
+Homepage = "https://github.com/biosafetylvl5/PROJECT"
+Issues = "https://github.com/biosafetylvl5/PROJECT/issues"
+Documentation = "https://biosafetylvl5.github.io/PROJECT/"
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+strict_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+follow_untyped_imports = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+python_files = "test_*.py"
+norecursedirs = ["xarray_utils"]
+addopts = "-v -rf --ff --cov=src --cov-report=term-missing --cov-report=xml -m \"not limited_test_dataset_availability\""
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: CONCURRENT - marks tests as integration (select with '-m \"integration\"')",
+    "spans_multiple_packages: CONCURRENT - marks integration tests that test functionality that could fail due to errors in multiple repositories. e.g. listing or validating all plugins, etc. Allows calling tests to ensure the same error will not cause tests in multiple repos to fail.",
+    "limited_test_dataset_availability: CONCURRENT - marks integration tests that may have limited test dataset availability so may not be available to all users.",
+    "base: OPTIONAL INDEPENDENT - integration tests that complete very quickly and require only a minimal installation for testing basic functionality within the current repository",
+    "full: REQUIRED INDEPENDENT - integration tests that require a 'full' installation for testing all functionality within the current repository. 'full' marker includes all tests for the current repo except for tests included in the optional 'base' marker.",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", "docs"]
+skips = ["B101"]  # Skip assert warnings
+
+[tool.ruff]
+# Target Python version
+target-version = "py312"
+line-length = 88
+exclude = [
+    "tests",
+    "src/legacy",
+]
+
+[tool.ruff.lint]
+# Enable rules
+select = [
+    "E", "F", "W",  # pycodestyle and Pyflakes
+    "I",            # isort
+    "N",            # PEP8 naming
+    "D",            # pydocstyle
+    "UP",           # pyupgrade
+    "B",            # flake8-bugbear
+    "C4",           # flake8-comprehensions
+    "SIM",          # flake8-simplify
+    "ARG",          # flake8-unused-arguments
+    "ERA",          # eradicate
+    "PL",           # Pylint
+    "RUF",          # Ruff-specific rules
+    "TCH",          # flake8-type-checking
+    "S",            # flake8-bandit (security)
+    "A",            # flake8-builtins
+    "COM",          # flake8-commas
+    "PT",           # flake8-pytest-style
+    "PTH",          # flake8-use-pathlib
+    "TRY",          # tryceratops (exception handling)
+]
+
+ignore = [
+    "D203",  # one-blank-line-before-class (conflicts with D211)
+    "D212",  # multi-line-summary-first-line (conflicts with D213)
+    "E731",  # allow variable assigned lambdas (PLEASE!! I need my lambdas!)
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 5
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+# Allow assert statements in tests
+"tests/**/*" = ["S101"]
+# Ignore import violations in __init__.py files
+"__init__.py" = ["F401"]
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+# Unlike Black, force unix style line endings ("\n")
+line-ending = "lf"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_provider = "poetry"

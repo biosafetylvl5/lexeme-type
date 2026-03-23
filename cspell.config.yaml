@@ -1,0 +1,76 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - argparse
+  - charliermarsh
+  - CIRA
+  - commitizen
+  - COMMITIZEN
+  - dateparser
+  - docstrings
+  - Dunder
+  - esbenp
+  - geoips
+  - gethostname
+  - groupindex
+  - himawari
+  - IODC
+  - isort
+  - kwargs
+  - lextudio
+  - matangover
+  - mccabe
+  - Meso
+  - meteosat
+  - mypy
+  - Mypy
+  - newhost
+  - newplatform
+  - njpwerner
+  - NOAA
+  - numpy
+  - pathlib
+  - pinkrst
+  - pycodestyle
+  - pydantic
+  - pydocstyle
+  - Pyflakes
+  - Pylint
+  - pytest
+  - Pytest
+  - pythonpath
+  - pyupgrade
+  - pyyaml
+  - rabbitmq
+  - rabbitmqhost
+  - seviri
+  - snekvik
+  - sphinxarg
+  - tamasfe
+  - testhost
+  - trond
+  - tryceratops
+  - typer
+  - Uttmark
+  - viewcode
+  - xarray
+  - yday
+ignoreWords:
+  - norecursedirs
+  - venv
+  - brightgreen
+  - genbadge
+  - jpetrucciani
+  - junitxml
+  - outdirs
+  - oneline
+  - retval
+  - addopts
+  - repr
+  - runcmd
+  - sphinxcontrib
+  - testpaths
+  - xdist
+import: []
