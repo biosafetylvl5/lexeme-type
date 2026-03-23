@@ -1,4 +1,4 @@
-name: Check Code
+name: CI
 
 on:
   push:
@@ -14,6 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  UV_SYSTEM_PYTHON: true
   COMMITIZEN_START_REV: "9d83e6984277ccbe6c5f6713f65b75a90e7c7e40"
 
 jobs:
@@ -52,6 +53,12 @@ jobs:
         uses: pre-commit/action@v3.0.1
         with:
           extra_args: ruff-format --all-files
+
+      - name: Blacken-docs
+        if: success() || failure()
+        uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: blacken-docs --all-files
 
       - name: mdformat
         if: success() || failure()
@@ -107,9 +114,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - uses: astral-sh/setup-uv@v6
 
       - name: Install package with all extras
         run: uv pip install -e .[doc,lint,test] pytest mypy
