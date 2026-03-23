@@ -75,6 +75,7 @@ jobs:
           path: dist/
 
       - name: Install wheel and test dependencies
+        shell: bash
         run: |
           uv pip install dist/*.whl
           uv pip install pytest pytest-cov pytest-xdist pydantic
