@@ -41,6 +41,7 @@ pytest = { version = "*", optional = true }
 pytest-cov = { version = "*", optional = true }
 pytest-xdist = { version = "*", optional = true }
 commitizen = { version = "*", optional = true }
+pydantic = { version = "*", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 # Development dependencies that are always installed for development
@@ -75,6 +76,7 @@ test = [
     "pytest",                    # for running tests
     "pytest-cov",                # for test coverage
     "pytest-xdist",              # for parallel testing
+    "pydantic",                  # for pydantic compat. testing
 ]
 
 [tool.poetry.scripts]
