@@ -49,7 +49,7 @@ jobs:
           if-no-files-found: error
 
   # ---------------------------------------------------------------------------
-  # Run the test suite against the built wheel (one last sanity check.........)
+  # Run the test suite against the built wheel (not the source tree)
   # ---------------------------------------------------------------------------
   test-built-package:
     needs: build
@@ -89,9 +89,6 @@ jobs:
     needs: [build, test-built-package, publish-testpypi]
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
-    environment: pypi
-    permissions:
-      id-token: write # required
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -101,3 +98,5 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
