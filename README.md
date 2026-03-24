@@ -12,8 +12,6 @@
 ![PyPI - Version](https://img.shields.io/pypi/v/lexeme-type)
 ![Pepy Total Downloads](https://img.shields.io/pepy/dt/lexeme-type?style=flat)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/lexeme-type)
-
-
 [![GitHub stars](https://img.shields.io/github/stars/biosafetylvl5/lexeme-type.svg)](https://github.com/biosafetylvl5/lexeme-type/stargazers)
 
 # Lexeme type
