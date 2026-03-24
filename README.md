@@ -36,5 +36,6 @@ True
 >>>     kind: Lexeme
 >>>     interface: Lexeme
 >>> model = _Plugin(kind="reader", interface="readers")
->>> assert model.kind == model.interface == "reader"
+>>> model.kind == model.interface == "reader"
+True
 ```
