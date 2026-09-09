@@ -6,8 +6,6 @@ words:
   - argparse
   - charliermarsh
   - CIRA
-  - commitizen
-  - COMMITIZEN
   - dateparser
   - docstrings
   - Dunder

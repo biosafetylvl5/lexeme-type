@@ -6,7 +6,6 @@
 ![Ruff](.github/badges/ruff-badge.svg)
 ![Install](.github/badges/install-badge.svg)
 ![CSpell](.github/badges/cspell-badge.svg)
-![Commitizen](.github/badges/commitizen-badge.svg)
 
 ![GitHub Release](https://img.shields.io/github/v/release/biosafetylvl5/lexeme-type)
 ![PyPI - Version](https://img.shields.io/pypi/v/lexeme-type)

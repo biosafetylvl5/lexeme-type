@@ -15,7 +15,6 @@ concurrency:
 
 env:
   UV_SYSTEM_PYTHON: true
-  COMMITIZEN_START_REV: "9d83e6984277ccbe6c5f6713f65b75a90e7c7e40"
 
 jobs:
   # ---------------------------------------------------------------------------
@@ -25,8 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # needed for commitizen rev-range
 
       - uses: actions/setup-python@v5
         with:
@@ -89,18 +86,6 @@ jobs:
         uses: pre-commit/action@v3.0.1
         with:
           extra_args: cspell --all-files
-
-      - name: Commitizen (push)
-        if: (success() || failure()) && github.event_name == 'push'
-        run: |
-          uv pip install commitizen
-          cz check --rev-range ${{ env.COMMITIZEN_START_REV }}..HEAD
-
-      - name: Commitizen (PR)
-        if: (success() || failure()) && github.event_name == 'pull_request'
-        run: |
-          uv pip install commitizen
-          cz check --rev-range ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
 
   # ---------------------------------------------------------------------------
   # Single matrix job — install once, then run pytest + docs + mypy

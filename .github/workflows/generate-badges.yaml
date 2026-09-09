@@ -56,7 +56,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv pip install -e .[doc,lint,test]
-          uv pip install pytest mypy ruff commitizen coverage genbadge[all]
+          uv pip install pytest mypy ruff coverage genbadge[all]
 
       - name: Create directories
         run: |
@@ -180,29 +180,6 @@ jobs:
           "
           fi
 
-      - name: Check commitizen
-        id: commitizen
-        continue-on-error: true
-        env:
-          COMMITIZEN_START_REV: "9d83e6984277ccbe6c5f6713f65b75a90e7c7e40"
-        run: cz check --rev-range ${{ env.COMMITIZEN_START_REV }}..HEAD
-
-      - name: Generate commitizen badge
-        run: |
-          if [ "${{ steps.commitizen.outcome }}" == "success" ]; then
-            python -c "
-          from genbadge import Badge
-          b = Badge(left_txt='commitizen', right_txt='passing', color='brightgreen')
-          b.write_to('.github/badges/commitizen-badge.svg', use_shields=False)
-          "
-          else
-            python -c "
-          from genbadge import Badge
-          b = Badge(left_txt='commitizen', right_txt='failing', color='red')
-          b.write_to('.github/badges/commitizen-badge.svg', use_shields=False)
-          "
-          fi
-
       - name: Check for badge changes
         id: badge_changes
         run: |
@@ -235,6 +212,5 @@ jobs:
           echo "| Ruff | ${{ steps.ruff.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Install | ${{ steps.install.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| CSpell | ${{ steps.cspell.outcome }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Commitizen | ${{ steps.commitizen.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Badges committed: ${{ steps.badge_changes.outputs.has_changes }}" >> $GITHUB_STEP_SUMMARY
