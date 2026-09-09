@@ -3,13 +3,13 @@
 
 """Lightweight helper for treating singular and plural spellings as equivalent.
 
-A drop‑in str subclass that normalizes English nouns so that their
+A drop-in str subclass that normalizes English nouns so that their
 singular and plural forms compare as equal, hash to the same key, and work
-inside Pydantic v2 models. Ignores capitalization.
+inside Pydantic v2 models. Ignores capitalization.
 
 Examples
 --------
->>> from partial_lexeme import Lexeme
+>>> from lexeme_type.lexeme import Lexeme
 >>> Lexeme("reader") == "readers" == Lexeme("readers")
 True
 >>> {Lexeme("analyses"): 1} == {"analysis": 1}
@@ -17,21 +17,32 @@ True
 
 >>> from pydantic import BaseModel
 >>> class _Plugin(BaseModel):
->>>     kind: Lexeme
->>>     interface: Lexeme
+...     kind: Lexeme
+...     interface: Lexeme
+...
 >>> model = _Plugin(kind="reader", interface="readers")
 >>> assert model.kind == model.interface == "reader"
 """
 
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from pydantic import GetCoreSchemaHandler
+    from pydantic_core import CoreSchema
 
 __all__ = ["Lexeme"]
 
-# Irregular nouns – plural ↔ singular
+# Shortest word for which a trailing "s"/"ies" is treated as a plural suffix
+_MIN_LEN_FOR_SUFFIX_STRIP = 3
+# Shortest word that may take a bare "s" plural
+_MIN_LEN_FOR_PLURAL_S = 2
+
+# Irregular nouns - plural ↔ singular
 #   - Each plural maps to its singular
 #   - Singulars map to themselves so that a single lookup works
-_IRREGULAR: Dict[str, str] = {
+_IRREGULAR: dict[str, str] = {
     "analyses": "analysis",
     "analysis": "analysis",
     "indices": "index",
@@ -41,13 +52,13 @@ _IRREGULAR: Dict[str, str] = {
     "criteria": "criterion",
 }
 
-# Reverse map – singular → plural
-_S_TO_P: Dict[str, str] = {
+# Reverse map - singular → plural
+_S_TO_P: dict[str, str] = {
     singular: plural for plural, singular in _IRREGULAR.items() if plural != singular
 }
 
 
-def _normalize(word: str) -> str:
+def _normalize(word: str) -> str:  # noqa: PLR0911  # flat suffix-rule cascade
     """Convert nouns to their singular form.
 
     When provided with a noun, whether singular or plural, returns its singular form.
@@ -90,7 +101,11 @@ def _normalize(word: str) -> str:
     # heuristics
 
     # parties -> party (replace "ies" with "y" if the preceding letter is a consonant)
-    if w.endswith("ies") and len(w) > 3 and w[-4] not in "aeiou":
+    if (
+        w.endswith("ies")
+        and len(w) > _MIN_LEN_FOR_SUFFIX_STRIP
+        and w[-4] not in "aeiou"
+    ):
         return w[:-3] + "y"
 
     # quizzes -> quiz (remove "zes")
@@ -111,7 +126,7 @@ def _normalize(word: str) -> str:
         return w[:-2]
 
     # readers -> reader (remove "s")
-    if w.endswith("s") and not w.endswith("ss") and len(w) > 3:
+    if w.endswith("s") and not w.endswith("ss") and len(w) > _MIN_LEN_FOR_SUFFIX_STRIP:
         return w[:-1]
 
     return w
@@ -120,7 +135,7 @@ def _normalize(word: str) -> str:
 def _to_plural(word: str) -> str:
     r"""Return a plausible plural spelling for *word*.
 
-    In this function’s documentation, consider * a regular Linux wildcard character.
+    In this function's documentation, consider * a regular Linux wildcard character.
     This function attempts tp pluralize a singular English noun using:
 
     1. An irregular lookup table, `_S_TO_P` for known exceptions.
@@ -148,7 +163,7 @@ def _to_plural(word: str) -> str:
 
     Notes
     -----
-    -  This is best‑effort but the lexeme type does not depend on it because equality
+    -  This is best-effort but the lexeme type does not depend on it because equality
        and hashing always normalizes back to singular.
     -  It does not handle all English irregulars such as mouse -> mice unless present
        in `_S_TO_P`.
@@ -180,40 +195,38 @@ def _to_plural(word: str) -> str:
         return w + "zes"
 
     # reader -> readers (near default scenario, append "s")
-    if len(w) >= 2:
+    if len(w) >= _MIN_LEN_FOR_PLURAL_S:
         return w + "s"
 
-    raise ValueError(
-        f"No pluralization rule for word: {w}. Check if it's a valid noun!!"
-    )
+    msg = f"No pluralization rule for word: {w}. Check if it's a valid noun!!"
+    raise ValueError(msg)
 
 
 class Lexeme(str):
     """A string that treats singular and plural spellings as equal.
 
-    It behaves exactly like a built‑in ``str`` but overrides equality and
+    It behaves exactly like a built-in ``str`` but overrides equality and
     hashing to use the canonical singular form.  This makes singular and
     plural spellings interchangeable as dict keys, set members, CLI options,
     etc.
     """
 
-    def __new__(cls, value: Any) -> "Lexeme":
+    def __new__(cls, value: Any) -> Lexeme:
         """Create new Lexeme."""
         if isinstance(value, str):
             return super().__new__(cls, value)
-        raise TypeError(
-            f"{cls.__name__} must be built from str, got {type(value).__name__}"
-        )
+        msg = f"{cls.__name__} must be built from str, got {type(value).__name__}"
+        raise TypeError(msg)
 
     @property
-    def singular(self) -> "Lexeme":
+    def singular(self) -> Lexeme:
         """Return the singular spelling."""
-        return _normalize(self)
+        return Lexeme(_normalize(self))
 
     @property
-    def plural(self) -> "Lexeme":
+    def plural(self) -> Lexeme:
         """Return a plural spelling."""
-        return _to_plural(self.singular)
+        return Lexeme(_to_plural(self.singular))
 
     def _key(self) -> str:
         """Normalize key for comparisons and hashing."""
@@ -236,26 +249,29 @@ class Lexeme(str):
         return f"{self.__class__.__name__}({super().__str__()!r})"
 
     @classmethod
-    def __get_pydantic_core_schema__(cls, _source_type, _handler):
+    def __get_pydantic_core_schema__(
+        cls,
+        _source_type: Any,
+        _handler: GetCoreSchemaHandler,
+    ) -> CoreSchema:
         """Return a core_schema that allows ``Lexeme`` for use as a field in pydantic.
 
         Accepts ``str`` or ``Lexeme``; coerces to ``Lexeme``.
         Always serializes output as plain string.
         """
         # lazy import so only imported if using pydantic
-        from pydantic_core import core_schema
+        from pydantic_core import core_schema  # noqa: PLC0415
 
-        def _to_lexeme(value: object, _info=None):
+        def _to_lexeme(value: object, _info: Any = None) -> Lexeme:
             if isinstance(value, cls):
                 return value
             if isinstance(value, str):
                 return cls(value)
-            raise TypeError("String or Lexeme required")
+            msg = "String or Lexeme required"
+            raise TypeError(msg)
 
         return core_schema.no_info_after_validator_function(
             _to_lexeme,
             core_schema.str_schema(),
-            serialization=core_schema.plain_serializer_function_ser_schema(
-                lambda v: str(v)
-            ),
+            serialization=core_schema.plain_serializer_function_ser_schema(str),
         )
