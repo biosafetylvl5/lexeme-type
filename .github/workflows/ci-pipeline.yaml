@@ -106,7 +106,7 @@ jobs:
       - uses: astral-sh/setup-uv@v6
 
       - name: Install package with all extras
-        run: uv pip install -e .[doc,lint,test] pytest mypy
+        run: uv pip install -e '.[doc,lint,test]' pytest mypy
 
       - name: Run pytest
         run: python -m pytest

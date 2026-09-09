@@ -1,0 +1,5 @@
+# Keep the blank lines that separate top-level blocks and workflow steps;
+# without this yamlfmt collapses every workflow into a single dense block.
+formatter:
+  type: basic
+  retain_line_breaks: true

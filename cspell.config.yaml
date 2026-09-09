@@ -1,11 +1,15 @@
 version: "0.2"
-ignorePaths: []
+ignorePaths:
+  - .github/badges/*.svg
+  - .gitignore
 dictionaryDefinitions: []
 dictionaries: []
 words:
   - argparse
+  - autodoc
   - charliermarsh
   - CIRA
+  - copybutton
   - dateparser
   - docstrings
   - Dunder
@@ -22,20 +26,26 @@ words:
   - mccabe
   - Meso
   - meteosat
-  - mypy
   - Mypy
+  - mypy
   - newhost
   - newplatform
   - njpwerner
   - NOAA
   - numpy
   - pathlib
+  - Pepy
   - pinkrst
   - pycodestyle
   - pydantic
   - pydocstyle
   - Pyflakes
   - Pylint
+  - pypa
+  - PYPI
+  - pypi
+  - pycon
+  - pyproject
   - pytest
   - Pytest
   - pythonpath
@@ -43,32 +53,41 @@ words:
   - pyyaml
   - rabbitmq
   - rabbitmqhost
+  - sdist
+  - serialisation
+  - Serialisation
   - seviri
+  - singularised
   - snekvik
   - sphinxarg
   - tamasfe
   - testhost
   - trond
   - tryceratops
+  - typehints
   - typer
   - Uttmark
   - viewcode
   - xarray
   - yday
 ignoreWords:
-  - norecursedirs
-  - venv
+  - addopts
+  - aeiou
   - brightgreen
   - genbadge
+  - glas
   - jpetrucciani
   - junitxml
-  - outdirs
+  - norecursedirs
   - oneline
-  - retval
-  - addopts
+  - outdirs
   - repr
+  - retval
   - runcmd
   - sphinxcontrib
+  - sses
   - testpaths
+  - venv
   - xdist
+  - zzes
 import: []
