@@ -6,7 +6,6 @@
 ![Ruff](.github/badges/ruff-badge.svg)
 ![Install](.github/badges/install-badge.svg)
 ![CSpell](.github/badges/cspell-badge.svg)
-![Commitizen](.github/badges/commitizen-badge.svg)
 
 ![GitHub Release](https://img.shields.io/github/v/release/biosafetylvl5/lexeme-type)
 ![PyPI - Version](https://img.shields.io/pypi/v/lexeme-type)
@@ -18,14 +17,14 @@
 
 Lightweight no-dependency helper for treating singular and plural spellings as equivalent.
 
-A drop‑in str subclass that normalizes English nouns so that their
+A drop-in str subclass that normalizes English nouns so that their
 singular and plural forms compare as equal, hash to the same key, and work
 inside Pydantic v2 models. Ignores capitalization.
 
 Examples
 
-```python
->>> from partial_lexeme.lexeme import Lexeme
+```pycon
+>>> from lexeme_type.lexeme import Lexeme
 >>> Lexeme("reader") == "readers" == Lexeme("readers")
 True
 >>> {Lexeme("analyses"): 1} == {"analysis": 1}
@@ -33,8 +32,9 @@ True
 
 >>> from pydantic import BaseModel
 >>> class _Plugin(BaseModel):
->>>     kind: Lexeme
->>>     interface: Lexeme
+...     kind: Lexeme
+...     interface: Lexeme
+...
 >>> model = _Plugin(kind="reader", interface="readers")
 >>> model.kind == model.interface == "reader"
 True

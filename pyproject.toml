@@ -40,7 +40,6 @@ mypy = { version = "*", optional = true }
 pytest = { version = "*", optional = true }
 pytest-cov = { version = "*", optional = true }
 pytest-xdist = { version = "*", optional = true }
-commitizen = { version = "*", optional = true }
 pydantic = { version = "*", optional = true }
 
 [tool.poetry.group.dev.dependencies]
@@ -48,7 +47,6 @@ pydantic = { version = "*", optional = true }
 black = "*"
 pre-commit = "*"
 brassy = "*"
-commitizen = "*"
 
 [tool.poetry.extras]
 doc = [
@@ -61,7 +59,6 @@ doc = [
     "sphinx-argparse",           # for docs building
     "pinkrst",                   # for rst formatting
     "doc8",                      # for rst linting
-    "commitizen",                # for better commits
 ]
 
 lint = [
@@ -164,7 +161,7 @@ select = [
     "ERA",          # eradicate
     "PL",           # Pylint
     "RUF",          # Ruff-specific rules
-    "TCH",          # flake8-type-checking
+    "TC",           # flake8-type-checking
     "S",            # flake8-bandit (security)
     "A",            # flake8-builtins
     "COM",          # flake8-commas
@@ -214,8 +211,3 @@ line-ending = "lf"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.commitizen]
-name = "cz_conventional_commits"
-tag_format = "v$version"
-version_provider = "poetry"
